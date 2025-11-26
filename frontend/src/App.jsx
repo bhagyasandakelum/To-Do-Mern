@@ -1,16 +1,21 @@
 import { useState } from "react";
+import axios from "axios";
 
 function App() {
   const [newTodo, setNewTodo] = useState("");
   const [todos, setTodos] = useState([]);
 
-  function addTodo(e) {
+  const addTodo = async (e) => {
     e.preventDefault();
     if (!newTodo.trim()) return;
-
-    setTodos([...todos, newTodo.trim()]);
-    setNewTodo("");
-  }
+    try {
+      const response = await axios.post("/api/todos", { text: newTodo });
+      setTodos([...todos, response.data]);
+      setNewTodo("");
+    } catch (error) {
+      console.log("Error adding todo:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
